@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class Networking : MonoBehaviourPunCallbacks
 {
+    private void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
     void Start()
     {
         print("Connecting To Server");
@@ -17,6 +21,8 @@ public class Networking : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         print("Connected To Server as " + PhotonNetwork.LocalPlayer.NickName);
+
+        PhotonNetwork.JoinLobby();
     }
 
     public override void OnDisconnected(DisconnectCause cause)
