@@ -3,14 +3,15 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TheRoom : MonoBehaviourPunCallbacks
 {
     private List<TheRoom> _rooms = new List<TheRoom>();
 
+
     public RoomInfo RoomInfo { get; private set; }
 
-           
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         foreach(RoomInfo room in roomList)
@@ -26,7 +27,6 @@ public class TheRoom : MonoBehaviourPunCallbacks
             else
             {
                 Debug.Log("Max Players : " + room.MaxPlayers + ", " + room.Name);
-                //_rooms.Add(room);
             }
         }
     }

@@ -9,6 +9,11 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 {
     [SerializeField] private string _roomName;
 
+    [SerializeField] private Text _roomID;
+
+    [SerializeField] private Canvas _inRoomCanvas;
+    [SerializeField] private Canvas _mainMenuCanvas;
+
     public void ClickToCreateRoom()
     {
         RoomOptions roomOptions = new RoomOptions();
@@ -20,7 +25,12 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
     public override void OnCreatedRoom()
     {
-        Debug.Log("Room has been created successfully with name " + _roomName);
+        if (_roomID != null)
+        {
+            _roomID.text = _roomName;
+            _inRoomCanvas.gameObject.SetActive(true);
+            _mainMenuCanvas.gameObject.SetActive(false);
+        }
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
