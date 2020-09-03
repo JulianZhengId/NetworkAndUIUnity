@@ -8,13 +8,19 @@ using UnityEngine.UI;
 public class PlayerListing : MonoBehaviourPunCallbacks
 {
     [SerializeField] Text playerInRoomText;
-    private Player _player;
+    private Player player;
 
-    public Player Player { get; private set; }
+    public Player Player
+    {
+        get
+        {
+            return player;
+        }
+    }
 
     public void SetPlayerInfo(Player player)
     {
-        _player = player;
-        playerInRoomText.text = _player.NickName;
+        this.player = player;
+        playerInRoomText.text = this.player.NickName;
     }
 }

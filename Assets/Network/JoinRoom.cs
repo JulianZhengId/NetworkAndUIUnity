@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,19 +7,42 @@ using UnityEngine.UI;
 
 public class JoinRoom : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Text _roomNameText;
-    [SerializeField] private Text _roomID;
-    [SerializeField] private Canvas _inRoomCanvas;
-    [SerializeField] private Canvas _mainMenuCanvas;
+    [SerializeField] Transform playerListingMenuObject;
+    [SerializeField] private Canvas inRoomCanvas;
+    [SerializeField] private Canvas mainMeniCanvas;
+    [SerializeField] private Text roomNameText;
+    [SerializeField] private Text roomId;
+
     public override void OnJoinedRoom()
     {
-        _inRoomCanvas.gameObject.SetActive(true);
-        _mainMenuCanvas.gameObject.SetActive(false);
-        _roomID.text = "Room" + _roomNameText.text;
+        Debug.Log("JoinRoom");
+        inRoomCanvas.gameObject.SetActive(true);
+        mainMeniCanvas.gameObject.SetActive(false);
+        if (roomNameText.text == "")
+        {
+            roomId.text = PhotonNetwork.CurrentRoom.Name;
+        }
+        else
+        {
+            roomId.text = "Room " + roomNameText.text;
+        }   
     }
 
     public void OnClickJoinRoom()
     {
-        PhotonNetwork.JoinRoom("Room " + _roomNameText.text);
+        if (roomNameText.text != "")
+        {
+            PhotonNetwork.JoinRoom("Room " + roomNameText.text);
+        }
+        else  
+        {
+            PhotonNetwork.JoinRandomRoom();
+        }
+    }
+
+    public override void OnLeftRoom()
+    {
+        Debug.Log("Left Room");
+        playerListingMenuObject.DestroyChildren();
     }
 }

@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class UIHandler : MonoBehaviour
 {
-    public GameObject _enterIdPanel;
+    public GameObject enterIdPanel;
+    public GameObject playerCharacter;
 
     public void PanelHandle(bool isActive)
     {
-        if (_enterIdPanel != null)
+        if (enterIdPanel != null)
         {
-            _enterIdPanel.SetActive(isActive);
+            enterIdPanel.SetActive(isActive);
+            playerCharacter.SetActive(!isActive);
         }
     }
 

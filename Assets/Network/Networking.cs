@@ -7,32 +7,31 @@ using UnityEngine.UI;
 
 public class Networking : MonoBehaviourPunCallbacks
 {
-    //private void roomInfo;
-    public RoomInfo RoomInfo { get; private set; }
-    [SerializeField] private Text _playerNameText;
+    [SerializeField] private Text playerNameText;
+    [SerializeField] private string _nickName = "Player";
 
-    private void Awake()
-    {
-        PhotonNetwork.AutomaticallySyncScene = true;
-    }
     void Start()
     {
-        PlayerPrefs.DeleteAll();
-        print("Connecting To Server");
-        PhotonNetwork.GameVersion = MasterManager.GameSettings.GameVersion;
-        PhotonNetwork.NickName = MasterManager.GameSettings.NickName;
+        PhotonNetwork.GameVersion = "0.0.0";
+        SetPlayerName();
         PhotonNetwork.ConnectUsingSettings();
+    }
+
+    private void SetPlayerName()
+    {
+        int value = Random.Range(1000, 9999);
+        PhotonNetwork.NickName = _nickName + value.ToString();
     }
 
     public override void OnConnectedToMaster()
     {
-        print("Connected To Server as " + PhotonNetwork.LocalPlayer.NickName);
-        _playerNameText.text = PhotonNetwork.LocalPlayer.NickName;
+        PhotonNetwork.AutomaticallySyncScene = true;
+        playerNameText.text = PhotonNetwork.LocalPlayer.NickName;
         if (!PhotonNetwork.InLobby) PhotonNetwork.JoinLobby();
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        print("Disconnect for reason " + cause.ToString());
+        PhotonNetwork.ReconnectAndRejoin();
     }
 }

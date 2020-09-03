@@ -7,34 +7,47 @@ using UnityEngine.UI;
 
 public class CreateRoom : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private string _roomName;
-
-    [SerializeField] private Text _roomID;
-
-    [SerializeField] private Canvas _inRoomCanvas;
-    [SerializeField] private Canvas _mainMenuCanvas;
+    [SerializeField] private string roomName;
+    [SerializeField] private Text roomId;
+    [SerializeField] private Canvas inRoomCanvas;
+    [SerializeField] private Canvas mainMenuCanvas;
+    public Text joinRoomText;
+    float timer;
 
     public void ClickToCreateRoom()
     {
+        if (!PhotonNetwork.IsConnected) return;
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 3;
+        roomOptions.MaxPlayers = 4;
         int roomNumber = Random.Range(1, 10000000);
-        _roomName = "Room " + roomNumber;
-        PhotonNetwork.JoinOrCreateRoom(_roomName, roomOptions, TypedLobby.Default);
+        roomName = "Room " + roomNumber;
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
     }
 
     public override void OnCreatedRoom()
     {
-        if (_roomID != null)
+        if (roomId != null)
         {
-            _roomID.text = _roomName;
-            _inRoomCanvas.gameObject.SetActive(true);
-            _mainMenuCanvas.gameObject.SetActive(false);
+            roomId.text = roomName;
+            inRoomCanvas.gameObject.SetActive(true);
+            mainMenuCanvas.gameObject.SetActive(false);
         }
     }
 
-    public override void OnCreateRoomFailed(short returnCode, string message)
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.Log("Fail to Create Room");
+        joinRoomText.text = "Room Not Found. Try Again";
+        StartCoroutine(ChangeTextBack());
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        ClickToCreateRoom();
+    }
+
+    IEnumerator ChangeTextBack()
+    {
+        yield return new WaitForSeconds(2);
+        joinRoomText.text = "Let The Input Empty To Join Randomly";
     }
 }
